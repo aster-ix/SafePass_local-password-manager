@@ -1,25 +1,133 @@
+using System.Security.Cryptography;
+using System.Text;
+
 namespace SafePass_local_password_manager
 {
-    internal static class Program
+    class Program
     {
-        [STAThread]
         static void Main()
         {
+         
        
-            ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
-        }
+            Console.WriteLine("-test-");
+            Console.Write("master key: ");
+            string? masterPassword = Console.ReadLine();
 
-        public class PasswordEntry
+           
+            var encryption = new EncryptService(masterPassword);
+
+            
+            string originalPassword = "testPassword123";
+            Console.WriteLine($"\norig: {originalPassword}");
+
+            
+            string encrypted = encryption.Encrypt(originalPassword);
+            Console.WriteLine($"encrypted: {encrypted}");
+
+     
+            string decrypted = encryption.Decrypt(encrypted);
+            Console.WriteLine($"decrypted: {decrypted}");
+
+      
+            if (originalPassword == decrypted)
+            {
+                Console.WriteLine("\n[+] test");
+            }
+            else
+            {
+                Console.WriteLine("\n[-] test");
+            }
+
+            
+            
+        }
+    }
+
+    // данные по паролю
+    public class PasswordEntry
+    {
+        public int Id { get; set; }
+        public string? Service { get; set; }
+        public string? Username { get; set; }
+        public string? EncryptedPassword { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
+    }
+
+
+    // сам процесс шифрования
+    public class EncryptService
+    {
+        // 32 байта = 256 бит -- ключ шифрования
+        private readonly byte[] _key;
+
+        // 16 байт = 128 бит -- вектор инициализации
+        private readonly byte[] _iv;
+
+        public EncryptService(string masterKey)
         {
-            public int id {  get; set; }
-            public string? service { get; set; }
-            public string? username { get; set; } 
-            public string? encryptedPassword { get; set; } 
-            public DateTime created { get; set; }
-            public DateTime updated { get; set; }
+            using (var sha256 = SHA256.Create())
+            {
+                // тут берем мастер пароль, его кодируем в байты и из этих байтов создаем ключ в виде sha256
+                _key = sha256.ComputeHash(Encoding.UTF8.GetBytes(masterKey));
+
+                // тут уже берется мастер пароль + статичные случайные данные (соль) //  так как явное превышение 16 байтов - то ограничиваем
+                _iv = sha256.ComputeHash(Encoding.UTF8.GetBytes(masterKey + "A(:dfk094FJ3!#;f$)")).Take(16).ToArray();
+            }
         }
 
-        
+        public string Encrypt(string password)
+        {
+            using (var aes = Aes.Create())
+            {
+                aes.Key = _key;
+                aes.IV = _iv;
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.PKCS7;
+
+                var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
+                using (var memoryStream = new MemoryStream())
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (var streamWriter = new StreamWriter(cryptoStream))
+                        {
+                            streamWriter.Write(password);
+                        }
+                    }
+
+                    return Convert.ToBase64String(memoryStream.ToArray());
+                }
+
+
+            }
+
+        }
+
+        public string Decrypt(string password)
+        {
+            using (var aes = Aes.Create())
+            {
+                aes.Key = _key;
+                aes.IV = _iv;
+                aes.Mode = CipherMode.CBC;
+                aes.Padding = PaddingMode.PKCS7;
+
+                var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+                using (var memoryStream = new MemoryStream(Convert.FromBase64String(password)))
+                {
+                    using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (var streamReader = new StreamReader(cryptoStream))
+                        {
+                            return streamReader.ReadToEnd();
+                        }
+                    }
+
+                }
+
+            }
+        }
     }
 }
+    
