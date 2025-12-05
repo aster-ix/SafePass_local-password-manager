@@ -2,8 +2,15 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
+
+
+
 namespace SafePass_local_password_manager
 {
+    /// <summary>
+    /// небольшая сводка по этому namespace и по принципам шифрования в целом
+    /// TODO: дополнить
+    /// </summary>
     class Program
     {
         static void Main()
@@ -59,9 +66,9 @@ namespace SafePass_local_password_manager
     //CRUD interface - просто чтобы отдельно показать реализацию
     public interface IPasswordRepo
     {
-        void Create();
+        void Create(PasswordEntry entry); 
         List<PasswordEntry> GetAll();
-        PasswordEntry GetById(int id);
+        PasswordEntry? GetById(int id);
         void Update(PasswordEntry entry);
         void Delete(int id);
     }
@@ -94,13 +101,69 @@ namespace SafePass_local_password_manager
             var json = JsonSerializer.Serialize(_all, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_passFilePath, json);
         }
+
+        public void Create(PasswordEntry entry)
+        {
+
+            // в теории any проверяет в целом есть ли что-то в _all, если есть, то берет максимальный айди
+            // в коллекции + 1, если нет то просто 1
+
+            // TODO: [не критично] есть ли эффективнее метод чем через Any? => хотя в теории это и так максимально быстро
+            entry.Id = _all.Any() ? _all.Max(i => i.Id) + 1 : 1;
+            entry.Created = DateTime.Now;
+            entry.Updated = DateTime.Now;
+            _all.Add(entry);
+            SaveData();
+        }
+
+        public List<PasswordEntry> GetAll()
+        {
+            return _all;
+        }
+
+        public PasswordEntry? GetById(int id)
+        {
+            return _all.FirstOrDefault(i => i.Id == id);
+        }
+
+        public void Update(PasswordEntry entry)
+        {
+            var exist = GetById(entry.Id);
+            if (exist != null)
+            {
+                exist.Updated = DateTime.Now;
+                exist.EncryptedPassword = entry.EncryptedPassword;
+                exist.Service = entry.Service;
+                exist.Username = entry.Username;
+                SaveData();
+
+            }
+        }
+
+        public void Delete(int id)
+        {
+            var exist = GetById(id);
+            
+            // тут оказывается сам IDE говорит что лучше reverse nesting.
+            // реализация только в одной функции для теста
+            if (exist != null)
+            {
+                return;
+            }
+            _all.Remove(exist!); // -> тут теперь надо уверять что это null, потому что оно почему-то игнорит проверку выше
+            
+            SaveData();
+        }
     }
-    
+
 
 
     // сам процесс шифрования
     public class EncryptService
     {
+        
+        // TODO: ШИФРОВАНИЕ УСТАРЕВШЕЕ (оказывается), особенно CBC мод => заменить, мб на AES-GCM
+        // TODO: Безопасность - приоритет. Даже на фоне реализации GUI
         // 32 байта = 256 бит -- ключ шифрования
         private readonly byte[] _key;
 
