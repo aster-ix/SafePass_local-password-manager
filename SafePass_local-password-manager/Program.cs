@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 
 namespace SafePass_local_password_manager
 {
@@ -42,7 +43,8 @@ namespace SafePass_local_password_manager
             
         }
     }
-
+    
+    
     // данные по паролю
     public class PasswordEntry
     {
@@ -53,6 +55,47 @@ namespace SafePass_local_password_manager
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
     }
+    
+    //CRUD interface - просто чтобы отдельно показать реализацию
+    public interface IPasswordRepo
+    {
+        void Create();
+        List<PasswordEntry> GetAll();
+        PasswordEntry GetById(int id);
+        void Update(PasswordEntry entry);
+        void Delete(int id);
+    }
+
+    public class PasswordRepo : IPasswordRepo
+    {
+        private readonly string _passFilePath = "passwords.json";
+        private List<PasswordEntry> _all;
+
+        public PasswordRepo()
+        {
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            if (File.Exists(_passFilePath))
+            {
+                var json = File.ReadAllText(_passFilePath);
+                _all = JsonSerializer.Deserialize<List<PasswordEntry>>(json) ?? new List<PasswordEntry>();
+            }
+            else
+            {
+                _all = new List<PasswordEntry>();
+            }
+        }
+
+        private void SaveData()
+        {
+            var json = JsonSerializer.Serialize(_all, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_passFilePath, json);
+        }
+    }
+    
 
 
     // сам процесс шифрования
