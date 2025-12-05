@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace SafePass_local_password_manager;
 
-partial class AddForm
+partial class AddEditForm
 {
     /// <summary>
     /// Required designer variable.

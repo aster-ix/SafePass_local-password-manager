@@ -3,9 +3,9 @@ namespace SafePass_local_password_manager;
 public partial class MainForm : Form
 {
 
-    private PasswordEntryManager _manager;
-    private ListView listView;
-    private Button btnAdd, btnEdit, btnDelete, btnShowPassword;
+    private readonly PasswordEntryManager _manager;
+    private ListView _listView;
+    private Button _btnAdd, _btnEdit, _btnDelete, _btnShowPassword;
     
     public MainForm(PasswordEntryManager manager)
     {
@@ -19,8 +19,10 @@ public partial class MainForm : Form
         this.Text = "SafePass - Менеджер паролей";
         this.Size = new Size(800, 500);
         this.StartPosition = FormStartPosition.CenterScreen;
+        this.FormBorderStyle = FormBorderStyle.FixedDialog;
+        this.MaximizeBox = false;
 
-        listView = new ListView
+        _listView = new ListView
         {
             Location = new Point(20, 20),
             Size = new Size(740, 350),
@@ -29,12 +31,12 @@ public partial class MainForm : Form
             GridLines = true,
         };
 
-        listView.Columns.Add("ID", 50);
-        listView.Columns.Add("Сервис/Сайт", 200);
-        listView.Columns.Add("Логин", 200);
-        listView.Columns.Add("Дата создания", 150);
+        _listView.Columns.Add("ID", 50);
+        _listView.Columns.Add("Сервис/Сайт", 200);
+        _listView.Columns.Add("Логин", 200);
+        _listView.Columns.Add("Дата создания", 150);
 
-        btnAdd = new Button()
+        _btnAdd = new Button()
         {
             Text = "[+] Добавить",
             Location = new Point(20, 400),
@@ -44,9 +46,9 @@ public partial class MainForm : Form
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Arial", 10, FontStyle.Bold)
         };
-        // btnAdd += BtnAdd_Click;
+        _btnAdd.Click += BtnAdd_Click;
         
-        btnEdit = new Button
+        _btnEdit = new Button
         {
             Text = "[?] Изменить",
             Location = new Point(190, 400),
@@ -56,9 +58,9 @@ public partial class MainForm : Form
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Arial", 10, FontStyle.Bold)
         };
-        // btnEdit += BtnEdit_Click;
+        // _btnEdit += BtnEdit_Click;
         
-        btnDelete = new Button
+        _btnDelete = new Button
         {
             Text = "[-] Удалить",
             Location = new Point(360, 400),
@@ -70,7 +72,7 @@ public partial class MainForm : Form
         };
         // btnDelete += BtnDelete_Click;
         
-        btnShowPassword = new Button
+        _btnShowPassword = new Button
         {
             Text = "[=] Показать пароль",
             Location = new Point(580, 400),
@@ -83,16 +85,16 @@ public partial class MainForm : Form
         // btnShowPassword+= btnShowPassword_Click;
         
         
-        this.Controls.Add(listView);
-        this.Controls.Add(btnAdd);
-        this.Controls.Add(btnEdit);
-        this.Controls.Add(btnShowPassword);
-        this.Controls.Add(btnDelete);
+        this.Controls.Add(_listView);
+        this.Controls.Add(_btnAdd);
+        this.Controls.Add(_btnEdit);
+        this.Controls.Add(_btnShowPassword);
+        this.Controls.Add(_btnDelete);
     }
 
     private void LoadPasswords()
     {
-        listView.Items.Clear();
+        _listView.Items.Clear();
         var all = _manager.GetAllPasswords();
 
         foreach (var pass in all)
@@ -102,18 +104,19 @@ public partial class MainForm : Form
             password.SubItems.Add(pass.Username);
             password.SubItems.Add(pass.Created.ToString("yyyy-MM-dd HH:mm:ss"));
             password.Tag = pass.Id;
-            listView.Items.Add(password);
+            _listView.Items.Add(password);
         }
         
         
     }
 
-    /*private void BtnAdd_Click(object? sender, EventArgs e)
+    private void BtnAdd_Click(object? sender, EventArgs e)
     {
-        var addform = new AddForm();
+        var addform = new AddEditForm();
         if (addform.ShowDialog() == DialogResult.OK)
         {
-            // _manager.AddPassword();
+            _manager.AddPassword(addform.Service, addform.Username, addform.Password);
+            LoadPasswords();
         }
-    }*/
+    }
 }

@@ -292,13 +292,8 @@ namespace SafePass_local_password_manager
             }
         }
     }
-    
-    
-    //
-    // интерфейс
-    //
 
-
+    
     
 }
     
