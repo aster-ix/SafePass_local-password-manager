@@ -23,7 +23,7 @@ namespace SafePass_local_password_manager
                 
                 var manager = new PasswordEntryManager(masterKey);
                 
-                //Application.Run(new MainForm(manager));
+                Application.Run(new MainForm(manager));
             }
 
 
