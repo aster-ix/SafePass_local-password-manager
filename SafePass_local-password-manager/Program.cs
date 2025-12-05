@@ -4,93 +4,27 @@ using System.Text.Json;
 
 
 
-
 namespace SafePass_local_password_manager
 {
     /// <summary>
-    /// небольшая сводка по этому namespace и по принципам шифрования в целом
-    /// TODO: дополнить
+    /// 
     /// </summary>
     class Program
     {
+        [STAThread]
         static void Main()
         {
-            // так как IDE ждет нажатие enter так же как и ввод мастер пароля, надо жать enter дважды...
-            Console.WriteLine("test EncryptService + PasswordRepo + Manager\n");
-
-            Console.Write("master key: ");
-            string masterPassword = Console.ReadLine()
-                                    ?? throw new ArgumentNullException(nameof(masterPassword));
-
-            var manager = new PasswordEntryManager(masterPassword);
-
-            Console.WriteLine("\n[1] базовое шифрования - надо менять");
+            using (var login = new LoginForm())
             {
-                var enc = new EncryptService(masterPassword);
-                string pwd = "Hello123!";
-                string encrypted = enc.Encrypt(pwd);
-                string decrypted = enc.Decrypt(encrypted);
-
-                Console.WriteLine($"orig = {pwd}");
-                Console.WriteLine($"encrypted = {encrypted}");
-                Console.WriteLine($"decrypted = {decrypted}");
-                Console.WriteLine(decrypted == pwd ? "[OK]\n" : "[FAIL]\n");
+                if (login.ShowDialog() != DialogResult.OK)
+                    return;
+                
+                string masterKey = login.MasterKey;
+                
+                var manager = new PasswordEntryManager(masterKey);
+                
+                //Application.Run(new MainForm(manager));
             }
-
-            Console.WriteLine("[2] Тест (Create)");
-            {
-                manager.AddPassword("gmail", "user1", "mypassword123");
-                manager.AddPassword("discord", "catgirl", "kittyPass");
-
-                var all = manager.GetAllPasswords();
-                Console.WriteLine($"Всего записей = {all.Count} → {(all.Count >= 2 ? "[OK]" : "[FAIL]")}\n");
-            }
-
-            Console.WriteLine("[3] Тест (Read)");
-            {
-                var all = manager.GetAllPasswords();
-                int id = all[0].Id;
-
-                string? decrypted = manager.GetDecryptedPassword(id);
-
-                Console.WriteLine($"Дешифрованный  = {decrypted}");
-                Console.WriteLine(string.IsNullOrWhiteSpace(decrypted) ? "[-]\n" : "[+]\n");
-            }
-
-            Console.WriteLine("[4] Тест (Update)");
-            {
-                var all = manager.GetAllPasswords();
-                int id = all[0].Id;
-
-                manager.UpdatePassword(id, "gmail.com", "updatedUser", "newPassword777");
-                var updated = manager.GetAllPasswords().First(x => x.Id == id);
-
-                bool ok = updated.Service == "gmail.com" && updated.Username == "updatedUser";
-
-                Console.WriteLine(ok ? "[+]\n" : "[-]\n");
-            }
-
-            Console.WriteLine("[5] Тест (Delete)");
-            {
-                var all = manager.GetAllPasswords();
-                int id = all.Last().Id;
-
-                manager.DeletePassword(id);
-
-                var afterDelete = manager.GetAllPasswords();
-                bool stillExists = afterDelete.Any(x => x.Id == id);
-
-                Console.WriteLine(!stillExists ? "[+]\n" : "[-]\n");
-            }
-
-            Console.WriteLine("[6] Тест удаления несуществующего ID");
-            {
-                int id = 999999;
-                manager.DeletePassword(id);
-                Console.WriteLine("[+] (ошибки не было)\n");
-            }
-
-            Console.WriteLine("\n[END]");
 
 
         }
@@ -280,21 +214,17 @@ namespace SafePass_local_password_manager
     public class EncryptService
     {
         
-        // TODO: ШИФРОВАНИЕ УСТАРЕВШЕЕ (оказывается), особенно CBC мод => заменить, мб на AES-GCM
-        // TODO: Безопасность - приоритет. Даже на фоне реализации GUI
         // 32 байта = 256 бит -- ключ шифрования
         private readonly byte[] _key;
-
         // 16 байт = 128 бит -- вектор инициализации
         private readonly byte[] _iv;
-
+        
         public EncryptService(string masterKey)
         {
             using (var sha256 = SHA256.Create())
             {
                 // тут берем мастер пароль, его кодируем в байты и из этих байтов создаем ключ в виде sha256
                 _key = sha256.ComputeHash(Encoding.UTF8.GetBytes(masterKey));
-
                 // тут уже берется мастер пароль + статичные случайные данные (соль) //  так как явное превышение 16 байтов - то ограничиваем
                 _iv = sha256.ComputeHash(Encoding.UTF8.GetBytes(masterKey + "A(:dfk094FJ3!#;f$)")).Take(16).ToArray();
             }
@@ -302,6 +232,12 @@ namespace SafePass_local_password_manager
 
         public string Encrypt(string? password)
         {
+
+            if (string.IsNullOrEmpty(password))
+            {
+                return string.Empty;
+            }
+            
             using (var aes = Aes.Create())
             {
                 aes.Key = _key;
@@ -321,10 +257,11 @@ namespace SafePass_local_password_manager
                     }
 
                     return Convert.ToBase64String(memoryStream.ToArray());
-                }
+                }}
+     
 
 
-            }
+
 
         }
 
@@ -355,5 +292,13 @@ namespace SafePass_local_password_manager
             }
         }
     }
+    
+    
+    //
+    // интерфейс
+    //
+
+
+    
 }
     
