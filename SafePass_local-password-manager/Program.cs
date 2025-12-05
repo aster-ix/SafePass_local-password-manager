@@ -19,8 +19,7 @@ namespace SafePass_local_password_manager
        
             Console.WriteLine("-test-");
             Console.Write("master key: ");
-            string? masterPassword = Console.ReadLine();
-
+            string masterPassword = Console.ReadLine() ?? throw new ArgumentNullException(nameof(masterPassword));
            
             var encryption = new EncryptService(masterPassword);
 
@@ -55,12 +54,74 @@ namespace SafePass_local_password_manager
     // данные по паролю
     public class PasswordEntry
     {
+        
         public int Id { get; set; }
         public string? Service { get; set; }
         public string? Username { get; set; }
         public string? EncryptedPassword { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
+
+        
+    }
+
+    public class PasswordEntryManager(string masterPassword)
+    {
+        private readonly IPasswordRepo _passwordRepo = new PasswordRepo();                  // IDE говорит принимать не интерфейс, а сам класс
+                                                                                            // звучит как поломка D в SOLID // в общем лучше игнорить
+        private readonly EncryptService _encryptService = new EncryptService(masterPassword);
+        
+        // почему-то еще рекомендация принимать мастер пароль в класс за вводную переменную, чтобы убрать конструктор
+        // ну ок, потестим
+        /*public PasswordEntryManager(string masterPassword)
+        {
+            _passwordRepo = new PasswordRepo();
+            _encryptService = new EncryptService(masterPassword);
+        }*/
+        
+
+        public void AddPassword(string service, string username, string password)
+        {
+            var newEntry = new PasswordEntry
+            {
+                Service = service,
+                Username = username,
+                EncryptedPassword = _encryptService.Encrypt(password)
+            };
+            _passwordRepo.Create(newEntry);
+        }
+
+        public List<PasswordEntry> GetAllPasswords()
+        {
+            return _passwordRepo.GetAll();
+        }
+        
+        public string? GetDecryptedPassword(int id)
+        {
+            var entry = _passwordRepo.GetById(id);
+            return entry != null ? _encryptService.Decrypt(entry.EncryptedPassword!) : null;
+        }
+
+        public void UpdatePassword(int id, string service, string username, string password)
+        {
+            var entry = _passwordRepo.GetById(id);
+            if (entry == null)
+            {
+                return;
+            }
+          
+            entry.Service = service;
+            entry.Username = username;
+            entry.EncryptedPassword = _encryptService.Encrypt(password);
+            _passwordRepo.Update(entry);
+            
+        }
+
+        public void DeletePassword(int id)
+        {
+            _passwordRepo.Delete(id);
+        }
+        
     }
     
     //CRUD interface - просто чтобы отдельно показать реализацию
@@ -76,7 +137,7 @@ namespace SafePass_local_password_manager
     public class PasswordRepo : IPasswordRepo
     {
         private readonly string _passFilePath = "passwords.json";
-        private List<PasswordEntry> _all;
+        private List<PasswordEntry> _all = new();
 
         public PasswordRepo()
         {
@@ -129,15 +190,19 @@ namespace SafePass_local_password_manager
         public void Update(PasswordEntry entry)
         {
             var exist = GetById(entry.Id);
+                
             if (exist != null)
             {
-                exist.Updated = DateTime.Now;
-                exist.EncryptedPassword = entry.EncryptedPassword;
-                exist.Service = entry.Service;
-                exist.Username = entry.Username;
-                SaveData();
-
+                return;
             }
+            
+            exist!.Updated = DateTime.Now;
+            exist.EncryptedPassword = entry.EncryptedPassword;
+            exist.Service = entry.Service;
+            exist.Username = entry.Username;
+            SaveData();
+
+            
         }
 
         public void Delete(int id)
@@ -182,7 +247,7 @@ namespace SafePass_local_password_manager
             }
         }
 
-        public string Encrypt(string password)
+        public string Encrypt(string? password)
         {
             using (var aes = Aes.Create())
             {
@@ -212,6 +277,8 @@ namespace SafePass_local_password_manager
 
         public string Decrypt(string password)
         {
+        
+            
             using (var aes = Aes.Create())
             {
                 aes.Key = _key;
