@@ -97,7 +97,7 @@ public partial class MainForm : Form
     private void LoadPasswords()
     {
         _listView.Items.Clear();
-        var all = _manager.GetAllPasswords();
+        var all = _manager.GetAllPasswords().Where(e=>e.Id>0).ToList();
 
         foreach (var pass in all)
         {

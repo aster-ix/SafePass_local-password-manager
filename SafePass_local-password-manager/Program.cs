@@ -101,7 +101,10 @@ namespace SafePass_local_password_manager
         {
             _passwordRepo.Delete(id);
         }
-        
+        public bool VerifyKey()
+        {
+            return _passwordRepo.VerifyMasterKey(_encryptService);
+        }
     }
     
     //CRUD interface - просто чтобы отдельно показать реализацию
@@ -112,12 +115,14 @@ namespace SafePass_local_password_manager
         PasswordEntry? GetById(int id);
         void Update(PasswordEntry entry);
         void Delete(int id);
+        bool VerifyMasterKey(EncryptService encryptService);
     }
 
     public class PasswordRepo : IPasswordRepo
     {
         private readonly string _passFilePath = "passwords.json";
         private List<PasswordEntry> _all = new();
+      
 
         public PasswordRepo()
         {
@@ -205,6 +210,36 @@ namespace SafePass_local_password_manager
             _all.Remove(exist); // -> тут не надо уверять ибо была ошибка в проверке на null
             
             SaveData();
+        }
+
+        public bool VerifyMasterKey(EncryptService service)
+        {
+            var check = _all.FirstOrDefault(e => e.Id == 0);
+            if (check == null)
+            {
+                check = new PasswordEntry
+                {
+                    Id = 0,
+                    Service = "__$#system#$__",
+                    Username = "-",
+                    EncryptedPassword = service.Encrypt("VERIFICATION"),
+                    Created = DateTime.Now,
+                    Updated = DateTime.Now
+                };
+                _all.Add(check);
+                SaveData();
+                return true;
+            }
+
+            try
+            {
+                string decrypted = service.Decrypt(check.EncryptedPassword!);
+                return decrypted == "VERIFICATION";
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 

@@ -2,8 +2,8 @@ namespace SafePass_local_password_manager;
 
 public partial class LoginForm : Form
 {
-    private TextBox txtMasterKey;
-    private Button btnLogin;
+    private TextBox _txtMasterKey;
+    private Button _btnLogin;
 
     public string MasterKey { get; private set; }
     
@@ -35,7 +35,7 @@ public partial class LoginForm : Form
             Size = new Size(120, 20)
         };
         
-        txtMasterKey = new TextBox
+        _txtMasterKey = new TextBox
         {
             Location = new Point(150, 70),
             Size = new Size(200, 25),
@@ -43,7 +43,7 @@ public partial class LoginForm : Form
             Font = new Font("Arial", 10)
         };
         
-        btnLogin = new Button
+        _btnLogin = new Button
         {
             Text = "Войти",
             Location = new Point(150, 110),
@@ -54,28 +54,47 @@ public partial class LoginForm : Form
             Font = new Font("Arial", 10, FontStyle.Bold)
         };
         
-        btnLogin.Click += BtnLogin_Click;
+        _btnLogin.Click += BtnLogin_Click;
         
         
         this.Controls.Add(lblTitle);
         this.Controls.Add(lblPassword);
-        this.Controls.Add(txtMasterKey);
-        this.Controls.Add(btnLogin);
+        this.Controls.Add(_txtMasterKey);
+        this.Controls.Add(_btnLogin);
 
-        this.AcceptButton = btnLogin;
+        this.AcceptButton = _btnLogin;
 
         
     }
     private void BtnLogin_Click(object? sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(txtMasterKey.Text))
+        if (string.IsNullOrWhiteSpace(_txtMasterKey.Text))
         {
             MessageBox.Show("Введите мастер-пароль", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
-        MasterKey = txtMasterKey.Text;
-        this.DialogResult = DialogResult.OK;
-        this.Close();
+        try
+        {
+            var tempManager = new PasswordEntryManager(_txtMasterKey.Text);
+            if (!tempManager.VerifyKey())
+            {
+                MessageBox.Show("Неверный мастер-пароль", "Ошибка входа",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _txtMasterKey.Text = "";
+                return;
+            }
+            MasterKey = _txtMasterKey.Text;
+            this.DialogResult = DialogResult.OK;
+            this.Close();
+            
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Ошибка:\n{ex.Message}", "Ошибка", 
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        
     }
 }
