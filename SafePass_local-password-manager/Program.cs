@@ -31,7 +31,7 @@ namespace SafePass_local_password_manager
     }
 
 
-    // данные по паролю
+  
     public class PasswordEntry
     {
         
@@ -51,13 +51,6 @@ namespace SafePass_local_password_manager
                                                                                             // звучит как поломка D в SOLID // в общем лучше игнорить
         private readonly EncryptService _encryptService = new EncryptService(masterPassword);
         
-        // почему-то еще рекомендация принимать мастер пароль в класс за вводную переменную, чтобы убрать конструктор
-        // ну ок, потестим
-        /*public PasswordEntryManager(string masterPassword)
-        {
-            _passwordRepo = new PasswordRepo();
-            _encryptService = new EncryptService(masterPassword);
-        }*/
         
 
         public void AddPassword(string service, string username, string password)
@@ -107,7 +100,7 @@ namespace SafePass_local_password_manager
         }
     }
     
-    //CRUD interface - просто чтобы отдельно показать реализацию
+
     public interface IPasswordRepo
     {
         void Create(PasswordEntry entry); 
@@ -150,11 +143,7 @@ namespace SafePass_local_password_manager
 
         public void Create(PasswordEntry entry)
         {
-
-            // в теории any проверяет в целом есть ли что-то в _all, если есть, то берет максимальный айди
-            // в коллекции + 1, если нет то просто 1
-
-            // TODO: [не критично] есть ли эффективнее метод чем через Any? => хотя в теории это и так максимально быстро
+            
             entry.Id = _all.Any() ? _all.Max(i => i.Id) + 1 : 1;
             entry.Created = DateTime.Now;
             entry.Updated = DateTime.Now;
@@ -176,7 +165,7 @@ namespace SafePass_local_password_manager
         {
             var exist = GetById(entry.Id);
                 
-            if (exist == null) // та же ошибка что в Delete
+            if (exist == null) 
             {
                 return;
             }
@@ -194,20 +183,11 @@ namespace SafePass_local_password_manager
         {
             var exist = GetById(id);
             
-            // тут оказывается сам IDE говорит что лучше reverse nesting.
-            // реализация только в одной функции для теста
-            
-            //я гений что это написано XDD
-            /*if (exist != null)
-            {
-                return;
-            }*/
-            
             if (exist == null)
             {
                 return;
             }
-            _all.Remove(exist); // -> тут не надо уверять ибо была ошибка в проверке на null
+            _all.Remove(exist); 
             
             SaveData();
         }
@@ -245,7 +225,7 @@ namespace SafePass_local_password_manager
 
 
 
-    // сам процесс шифрования
+  
     public class EncryptService
     {
         
