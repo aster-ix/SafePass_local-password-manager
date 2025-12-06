@@ -5,9 +5,7 @@ public class PasswordEntryManager(string masterPassword)
     private readonly IPasswordRepo _passwordRepo = new PasswordRepo();                  // IDE говорит принимать не интерфейс, а сам класс
                                                                                         // звучит как поломка D в SOLID // в общем лучше игнорить
     private readonly EncryptService _encryptService = new EncryptService(masterPassword);
-        
-        
-
+    
     public void AddPassword(string service, string username, string password)
     {
         var newEntry = new PasswordEntry
