@@ -84,7 +84,7 @@ public partial class MainForm : Form
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Arial", 10, FontStyle.Bold)
         };
-        // btnShowPassword+= btnShowPassword_Click;
+        _btnShowPassword.Click += btnShowPassword_Click;
         
         
         this.Controls.Add(_listView);
@@ -161,5 +161,18 @@ public partial class MainForm : Form
             _manager.DeletePassword(id);
             LoadPasswords();
         }
+    }
+
+    private void btnShowPassword_Click(object? sender, EventArgs e)
+    {
+        if (_listView.SelectedItems.Count == 0)
+        {
+            MessageBox.Show("Выберите запись для просмотра", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+        int id = (int)_listView.SelectedItems[0].Tag!;
+        string pass = _manager.GetDecryptedPassword(id)!;
+        MessageBox.Show($"Пароль: {pass}", "Пароль", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        
     }
 }
