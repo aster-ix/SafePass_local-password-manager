@@ -1,4 +1,3 @@
-using System.Xml;
 
 namespace SafePass_local_password_manager;
 
@@ -37,6 +36,7 @@ public partial class MainForm : Form
         _listView.Columns.Add("Сервис/Сайт", 200);
         _listView.Columns.Add("Логин", 200);
         _listView.Columns.Add("Дата создания", 150);
+        _listView.Columns.Add("Обновлен", 150);
 
         _btnAdd = new Button()
         {
@@ -105,6 +105,7 @@ public partial class MainForm : Form
             password.SubItems.Add(pass.Service);
             password.SubItems.Add(pass.Username);
             password.SubItems.Add(pass.Created.ToString("yyyy-MM-dd HH:mm:ss"));
+            password.SubItems.Add(pass.Updated.ToString("yyyy-MM-dd HH:mm:ss"));
             password.Tag = pass.Id;
             _listView.Items.Add(password);
         }

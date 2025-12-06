@@ -28,6 +28,7 @@ namespace SafePass_local_password_manager;
         {
             if (File.Exists(_passFilePath))
             {
+                
                 var json = File.ReadAllText(_passFilePath);
                 _all = JsonSerializer.Deserialize<List<PasswordEntry>>(json) ?? new List<PasswordEntry>();
             }
@@ -40,8 +41,14 @@ namespace SafePass_local_password_manager;
         private void SaveData()
         {
             var json = JsonSerializer.Serialize(_all, new JsonSerializerOptions { WriteIndented = true });
+            if (File.Exists(_passFilePath))
+            {
+                File.SetAttributes(_passFilePath, FileAttributes.Normal);
+            }
+    
             File.WriteAllText(_passFilePath, json);
             File.SetAttributes(_passFilePath, FileAttributes.Hidden);
+         
         }
 
         public void Create(PasswordEntry entry)

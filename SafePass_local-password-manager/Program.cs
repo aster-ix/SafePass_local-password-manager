@@ -1,13 +1,11 @@
-using System.Security.Cryptography;
-using System.Text;
-
 
 namespace SafePass_local_password_manager
 {
     /// <summary>
-    /// 
+    /// Приложение представляет из себя менеджер паролей
+    /// Шифрование AES-CBC -> в будущем будет изменено
     /// </summary>
-    class Program
+    static class Program
     {
         [STAThread]
         static void Main()

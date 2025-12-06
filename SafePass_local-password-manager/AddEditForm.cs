@@ -18,7 +18,7 @@ public partial class AddEditForm : Form
        Username = username;    
     }
 
-    public void InitializeComponents()
+    private void InitializeComponents()
     {
         this.Text = "Добавить/Изменить пароль";
         this.Size = new Size(400, 250);
@@ -53,9 +53,9 @@ public partial class AddEditForm : Form
             Size = new Size(100, 35),
             BackColor = Color.Gray,
             ForeColor = Color.White,
-            FlatStyle = FlatStyle.Flat
+            FlatStyle = FlatStyle.Flat  
         };
-        _btnCancel.Click += (obj,eventarg) =>{ this.DialogResult = DialogResult.Cancel; this.Close(); };
+        _btnCancel.Click += (_,_) =>{ this.DialogResult = DialogResult.Cancel; this.Close(); };
         
         this.Controls.AddRange(new Control[] { lblService, _tbService, lblUsername, _tbUsername, lblPassword, _tbPassword, _btnSave, _btnCancel });
     }
