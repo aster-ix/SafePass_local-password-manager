@@ -72,7 +72,7 @@ public partial class MainForm : Form
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Arial", 10, FontStyle.Bold)
         };
-        // btnDelete += BtnDelete_Click;
+        _btnDelete.Click += BtnDelete_Click;
         
         _btnShowPassword = new Button
         {
@@ -143,5 +143,23 @@ public partial class MainForm : Form
             }
         }
 
+    }
+
+    private void BtnDelete_Click(object? sender, EventArgs e)
+    {
+        if (_listView.SelectedItems.Count == 0)
+        {
+            MessageBox.Show("Выберите запись для удаления", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var warn = MessageBox.Show("Вы уверены что хотите удалить пароль?", "Проверка", MessageBoxButtons.YesNo,
+            MessageBoxIcon.Question);
+        if (warn == DialogResult.Yes)
+        {
+            int id = (int)_listView.SelectedItems[0].Tag!;
+            _manager.DeletePassword(id);
+            LoadPasswords();
+        }
     }
 }
