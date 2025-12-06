@@ -1,3 +1,5 @@
+using System.Xml;
+
 namespace SafePass_local_password_manager;
 
 public partial class MainForm : Form
@@ -58,7 +60,7 @@ public partial class MainForm : Form
             FlatStyle = FlatStyle.Flat,
             Font = new Font("Arial", 10, FontStyle.Bold)
         };
-        // _btnEdit += BtnEdit_Click;
+        _btnEdit.Click += BtnEdit_Click;
         
         _btnDelete = new Button
         {
@@ -118,5 +120,28 @@ public partial class MainForm : Form
             _manager.AddPassword(addform.Service, addform.Username, addform.Password);
             LoadPasswords();
         }
+    }
+
+    private void BtnEdit_Click(object? sender, EventArgs e)
+    {
+        if (_listView.SelectedItems.Count == 0)
+        {
+            MessageBox.Show("Выберите запись для редактирования", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        int id = (int)_listView.SelectedItems[0].Tag!;
+        var pass = _manager.GetAllPasswords().FirstOrDefault(p => p.Id == id);
+
+        if (pass != null)
+        {
+            var editform = new AddEditForm();
+            if (editform.ShowDialog() == DialogResult.OK)
+            {
+                _manager.UpdatePassword(id, editform.Service, editform.Username, editform.Password);
+                LoadPasswords();
+            }
+        }
+
     }
 }
