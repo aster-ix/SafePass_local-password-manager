@@ -173,7 +173,8 @@ public partial class MainForm : Form
         }
         int id = (int)_listView.SelectedItems[0].Tag!;
         string pass = _manager.GetDecryptedPassword(id)!;
-        MessageBox.Show($"Пароль: {pass}", "Пароль", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        Clipboard.SetText(pass);
+        MessageBox.Show($"Пароль был скопирован: {pass}", "Пароль", MessageBoxButtons.OK, MessageBoxIcon.Information);
         
     }
 }
