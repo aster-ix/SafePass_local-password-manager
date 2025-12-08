@@ -29,7 +29,11 @@ public partial class MainForm : Form
             Size = new Size(740, 350),
             View = View.Details,
             FullRowSelect = true,
-            GridLines = true,
+            GridLines = false,
+            BorderStyle = BorderStyle.None,
+            BackColor = Color.White,
+            Font = new Font("Segoe UI", 10),
+            HeaderStyle = ColumnHeaderStyle.Nonclickable
         };
 
         _listView.Columns.Add("ID", 50);

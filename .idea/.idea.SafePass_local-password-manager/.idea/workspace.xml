@@ -7,12 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ffd1b046-6d40-49b5-9a5f-233b588547ed" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.SafePass_local-password-manager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SafePass_local-password-manager/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SafePass_local-password-manager/MainForm.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SafePass_local-password-manager/MainForm.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordRepository.cs" afterDir="false" />
-    </list>
+    <list default="true" id="ffd1b046-6d40-49b5-9a5f-233b588547ed" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
