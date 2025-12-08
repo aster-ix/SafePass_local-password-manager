@@ -50,7 +50,7 @@ public partial class MainForm : Form
             BackColor = Color.FromArgb(0, 150, 0),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Font = new Font("Arial", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
         };
         _btnAdd.Click += BtnAdd_Click;
         
@@ -62,7 +62,7 @@ public partial class MainForm : Form
             BackColor = Color.FromArgb(0, 100, 200),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Font = new Font("Arial", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
         };
         _btnEdit.Click += BtnEdit_Click;
         
@@ -74,7 +74,7 @@ public partial class MainForm : Form
             BackColor = Color.FromArgb(150, 20, 60),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Font = new Font("Arial", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
         };
         _btnDelete.Click += BtnDelete_Click;
         
@@ -86,7 +86,7 @@ public partial class MainForm : Form
             BackColor = Color.FromArgb(225, 160, 0),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Font = new Font("Arial", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
         };
         _btnShowPassword.Click += btnShowPassword_Click;
         

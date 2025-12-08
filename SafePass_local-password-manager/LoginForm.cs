@@ -23,7 +23,7 @@ public partial class LoginForm : Form
         Label lblTitle = new Label
         {
             Text = "SafePass - Менеджер паролей",
-            Font = new Font("Arial", 14, FontStyle.Bold),
+            Font = new Font("Segoe UI", 14, FontStyle.Bold),
             Location = new Point(50, 20),
             Size = new Size(300, 30)
         };
@@ -40,7 +40,7 @@ public partial class LoginForm : Form
             Location = new Point(150, 70),
             Size = new Size(200, 25),
             PasswordChar = '*',
-            Font = new Font("Arial", 10)
+            Font = new Font("Segoe UI", 10)
         };
         
         _btnLogin = new Button
@@ -51,7 +51,7 @@ public partial class LoginForm : Form
             BackColor = Color.FromArgb(0, 100, 200),
             ForeColor = Color.White,
             FlatStyle = FlatStyle.Flat,
-            Font = new Font("Arial", 10, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10, FontStyle.Bold)
         };
         
         _btnLogin.Click += BtnLogin_Click;
