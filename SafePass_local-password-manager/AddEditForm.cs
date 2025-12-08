@@ -13,9 +13,9 @@ public partial class AddEditForm : Form
     public AddEditForm(string service= "", string password= "", string username = "")
     {
        InitializeComponents();
-       Service = service;
-       Password = password;
-       Username = username;    
+       _tbService!.Text = service;
+       _tbPassword!.Text = password;
+       _tbUsername!.Text = username;
     }
 
     private void InitializeComponents()

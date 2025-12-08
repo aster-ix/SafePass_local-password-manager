@@ -130,7 +130,8 @@ public partial class MainForm : Form
     {
         if (_listView.SelectedItems.Count == 0)
         {
-            MessageBox.Show("Выберите запись для редактирования", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("Выберите запись для редактирования", "Ошибка", 
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -139,7 +140,9 @@ public partial class MainForm : Form
 
         if (pass != null)
         {
-            var editform = new AddEditForm();
+            string decryptedPassword = _manager.GetDecryptedPassword(id) ?? "";
+            var editform = new AddEditForm(pass.Service ?? "", decryptedPassword, pass.Username ?? "");
+        
             if (editform.ShowDialog() == DialogResult.OK)
             {
                 _manager.UpdatePassword(id, editform.Service, editform.Username, editform.Password);
