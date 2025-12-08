@@ -112,7 +112,6 @@ public partial class MainForm : Form
         
         
     }
-
     private void BtnAdd_Click(object? sender, EventArgs e)
     {
         var addform = new AddEditForm();

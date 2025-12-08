@@ -8,7 +8,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ffd1b046-6d40-49b5-9a5f-233b588547ed" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SafePass_local-password-manager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SafePass_local-password-manager/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SafePass_local-password-manager/MainForm.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SafePass_local-password-manager/MainForm.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SafePass_local-password-manager/PasswordRepository.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,24 +45,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.SafePass_local-password-manager.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Publish to folder.SafePass_v1.0.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.SafePass_local-password-manager.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Publish to folder.SafePass_v1.0.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Publish to folder.SafePass_v1.0">
     <configuration name="SafePass_v1.0" type="DotNetFolderPublish" factoryName="Publish to folder">
       <riderPublish configuration="Release" platform="Any CPU" produce_single_file="true" target_folder="$PROJECT_DIR$/SafePass_local-password-manager/bin/Release/net9.0-windows/win-x64/publish" target_framework="net9.0-windows" uuid_high="-3097152085513679262" uuid_low="4267581710343805575">
@@ -133,27 +136,14 @@
           <option name="timeStamp" value="3" />
         </breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/SafePass_local-password-manager/MainForm.cs</url>
-          <line>106</line>
-          <properties documentPath="C:\Users\aster\Desktop\mospoly\2 курс\1 семестр\Курсовая - ООП\SafePass_local-password-manager\SafePass_local-password-manager\MainForm.cs" containingFunctionPresentation="Method 'LoadPasswords'">
-            <startOffsets>
-              <option value="3383" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3451" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/SafePass_local-password-manager/PasswordRepository.cs</url>
-          <line>38</line>
+          <line>50</line>
           <properties documentPath="C:\Users\aster\Desktop\mospoly\2 курс\1 семестр\Курсовая - ООП\SafePass_local-password-manager\SafePass_local-password-manager\PasswordRepository.cs" containingFunctionPresentation="Method 'LoadData'">
             <startOffsets>
-              <option value="1023" />
+              <option value="1555" />
             </startOffsets>
             <endOffsets>
-              <option value="1024" />
+              <option value="1556" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="6" />

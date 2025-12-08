@@ -17,20 +17,32 @@ namespace SafePass_local_password_manager;
     {
         private readonly string _passFilePath = "passwords.json";
         private List<PasswordEntry> _all = new();
+        private EncryptService? _encryptService;
       
 
-        public PasswordRepo()
+        public void SetEncryptService(EncryptService encryptService)
         {
+            _encryptService = encryptService;
             LoadData();
         }
 
         private void LoadData()
         {
+            if (_encryptService == null)
+                throw new InvalidOperationException("EncryptService не установлен");
+
             if (File.Exists(_passFilePath))
             {
-                
-                var json = File.ReadAllText(_passFilePath);
-                _all = JsonSerializer.Deserialize<List<PasswordEntry>>(json) ?? new List<PasswordEntry>();
+                try
+                {
+                    var encryptedData = File.ReadAllText(_passFilePath);
+                    var json = _encryptService.Decrypt(encryptedData);
+                    _all = JsonSerializer.Deserialize<List<PasswordEntry>>(json) ?? new List<PasswordEntry>();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Неверный мастер-пароль", ex);
+                }
             }
             else
             {
@@ -40,13 +52,15 @@ namespace SafePass_local_password_manager;
 
         private void SaveData()
         {
+            if (_encryptService == null)
+                throw new InvalidOperationException("EncryptService не установлен");
             var json = JsonSerializer.Serialize(_all, new JsonSerializerOptions { WriteIndented = true });
+            var encryptedData = _encryptService.Encrypt(json);
             if (File.Exists(_passFilePath))
             {
                 File.SetAttributes(_passFilePath, FileAttributes.Normal);
             }
-    
-            File.WriteAllText(_passFilePath, json);
+            File.WriteAllText(_passFilePath, encryptedData);
             File.SetAttributes(_passFilePath, FileAttributes.Hidden);
          
         }
@@ -54,7 +68,13 @@ namespace SafePass_local_password_manager;
         public void Create(PasswordEntry entry)
         {
             
-            entry.Id = _all.Any() ? _all.Max(i => i.Id) + 1 : 1;
+            int newId = 1;
+            while (_all.Any(e => e.Id == newId))
+            {
+                newId++;
+            }
+    
+            entry.Id = newId;
             entry.Created = DateTime.Now;
             entry.Updated = DateTime.Now;
             _all.Add(entry);

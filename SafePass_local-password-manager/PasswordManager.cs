@@ -1,11 +1,16 @@
 namespace SafePass_local_password_manager;
 
-public class PasswordEntryManager(string masterPassword)
+public class PasswordEntryManager
 {
-    private readonly IPasswordRepo _passwordRepo = new PasswordRepo();                  // IDE говорит принимать не интерфейс, а сам класс
-                                                                                        // звучит как поломка D в SOLID // в общем лучше игнорить
-    private readonly EncryptService _encryptService = new EncryptService(masterPassword);
+    private readonly PasswordRepo _passwordRepo;
+    private readonly EncryptService _encryptService;
     
+    public PasswordEntryManager(string masterPassword)
+    {
+        _encryptService = new EncryptService(masterPassword);
+        _passwordRepo = new PasswordRepo();
+        _passwordRepo.SetEncryptService(_encryptService);
+    }
     public void AddPassword(string service, string username, string password)
     {
         var newEntry = new PasswordEntry
